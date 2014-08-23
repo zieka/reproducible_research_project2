@@ -1,0 +1,46 @@
+---
+title: "peer_assignment_2"
+author: "Kyle Scully"
+date: "August 23, 2014"
+output:
+  html_document:
+    keep_md: true
+---
+
+# Synopsis
+
+Storms and other severe weather events can cause both public health and economic
+problems for communities and municipalities. Many severe events can result in
+fatalities, injuries, and property damage, and preventing such outcomes to the
+extent possible is a key concern.
+
+This project involves exploring the U.S. National Oceanic and Atmospheric
+Administration's (NOAA) storm database. This database tracks characteristics of
+major storms and weather events in the United States, including when and where
+they occur, as well as estimates of any fatalities, injuries, and property
+damage.
+
+This report will show that of all severe weather events, (blank) are most the
+harmful with respect to population health.  Additionally, data suggesting that
+(blank) types of events have the greatest economic consequences will be reported
+here.
+
+## Data Processing
+
+```{r,results='asis',cache=TRUE }
+library('R.utils')
+
+if (!file.exists("./repdata-data-StormData.csv")){
+  download.file(
+		"https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2",
+		destfile = "./repdata-data-StormData.csv.bz2",
+		method = "curl"
+  )
+
+	bunzip2("./repdata-data-StormData.csv.bz2")
+}
+
+data <- read.csv("repdata-data-StormData.csv")
+```
+
+## Results
