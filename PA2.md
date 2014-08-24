@@ -1,5 +1,5 @@
 
-# Severe Weather Events and Their Effects on Population Health and Economic Impact"
+# Severe Weather Events and Their Effects on Population Health and Economic Impact
 ## Kyle Scully
 ### August 23, 2014
 
