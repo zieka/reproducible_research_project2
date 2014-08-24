@@ -10,4 +10,4 @@ Using the knitr and R markdown packages in conjunction with R studio the file
 
 Using RStudio the final html will be published to rpubs.com and can be found at the following link:
 
-[rpubs.com/](http://www.rpubs.com/)
+[http://rpubs.com/zieka/reproducible_research_project2](http://rpubs.com/zieka/reproducible_research_project2)

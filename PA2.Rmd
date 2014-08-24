@@ -1,5 +1,5 @@
 ---
-title: "peer_assignment_2"
+title: "Severe Weather Events and Their Effects on Population Health and Economic Impact"
 author: "Kyle Scully"
 date: "August 23, 2014"
 output:
@@ -20,15 +20,16 @@ major storms and weather events in the United States, including when and where
 they occur, as well as estimates of any fatalities, injuries, and property
 damage.
 
-This report will show that of all severe weather events, (blank) are most the
+This report will show that of all severe weather events, tornadoes are most the
 harmful with respect to population health.  Additionally, data suggesting that
-(blank) types of events have the greatest economic consequences will be reported
+tornadoes also have the greatest economic consequences will be reported
 here.
 
 ## Data Processing
+First we download and read in the data so that we can analyze it using the R programming language:
 
-```{r,results='asis',cache=TRUE }
-library('R.utils')
+```{r,results='asis',message=FALSE,warning=FALSE}
+library(R.utils)
 
 if (!file.exists("./repdata-data-StormData.csv")){
   download.file(
@@ -43,4 +44,73 @@ if (!file.exists("./repdata-data-StormData.csv")){
 data <- read.csv("repdata-data-StormData.csv")
 ```
 
+To analyze the total harm to the population health we need add the recorded death count for a given event and the recorded injury count for that particular event and form a new column with the sum:
+
+```{r}
+data[,'TOTAL_HARM'] <- data[,'FATALITIES'] + data[,'INJURIES']
+```
+
+Likewise, in order to analyze the total fiscal damage we need to sum the recorded fiscal damage to property and fiscal damage to crops into a new column:
+
+```{r}
+data[,'TOTAL_DMG'] <- data[,'PROPDMG'] + data[,'CROPDMG']
+```
+
+Lets first address harm to population health.  We create a new list which sums all the harm counts by the event type:
+
+```{r}
+harm_count <- aggregate(data$TOTAL_HARM, by = list(data$EVTYPE), sum)
+```
+
+Lets reorder the list by the highest count and show the top 10 events:
+
+```{r}
+harm_count <- harm_count[with(harm_count, order(-x)), ]
+
+row.names(harm_count) <- NULL
+colnames(harm_count) <- c("EVENT","COUNT")
+
+harm_count$EVENT <- as.character(harm_count$EVENT)
+harm_count$EVENT <- factor(harm_count$EVENT, levels=unique(harm_count$EVENT))
+
+head(harm_count,10)
+```
+
+Now lets do the same for economic impact of the events.  First we create a list which sums all the fiscal damage by the event type:
+
+```{r}
+fiscal_impact <- aggregate(data$TOTAL_DMG, by = list(data$EVTYPE), sum)
+```
+
+Lets reorder the list by the highest damage in dollars and show the top 10 events:
+
+```{r}
+fiscal_impact <- fiscal_impact[with(fiscal_impact, order(-x)), ]
+
+row.names(fiscal_impact) <- NULL
+colnames(fiscal_impact) <- c("EVENT","TOTAL_DAMAGE")
+
+fiscal_impact$EVENT <- as.character(fiscal_impact$EVENT)
+fiscal_impact$EVENT <- factor(fiscal_impact$EVENT, levels=unique(fiscal_impact$EVENT))
+
+head(fiscal_impact,10)
+```
+
 ## Results
+
+#### Across the United States, which types of events are most harmful with respect to population health?
+
+```{r}
+library(ggplot2)
+ggplot(data=harm_count[1:5,], aes(x=EVENT, y=COUNT)) + geom_bar(stat="identity")
+```
+
+From the plot above we can see that the events which are most harmful with respec to population health are tornadoes.
+
+#### Across the United States, which types of events have the greatest economic consequences?
+```{r}
+library(ggplot2)
+ggplot(data=fiscal_impact[1:5,], aes(x=EVENT, y=TOTAL_DAMAGE)) + geom_bar(stat="identity")
+```
+
+From the plot above we can see that the events which have the greatest economic consequences are also tornadoes.
